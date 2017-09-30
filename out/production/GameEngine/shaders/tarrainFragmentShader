@@ -42,13 +42,14 @@ void main(void){
     specularFactor = max(specularFactor, 0.0);
 
     float damperFactor = pow(specularFactor, shineDamper);
-    vec3 finalSpecular = damperFactor * lightColour;
+    vec3 finalSpecular = damperFactor * lightColour * reflectivity;
 
     float nDotl = dot(unitNormal, unitLight);
-    float brightness = max(nDotl, 0.2);
+    float brightness = max(nDotl, 0.1);
 
-    vec3 diffuse = brightness * lightColour * reflectivity;
+    vec3 diffuse = brightness * lightColour;
 
     outColour = backgroundTextureColor + rTextureColor + gTextureColor + bTextureColor;
+    outColour = vec4(diffuse, 1.0) * outColour;
     outColour = mix(vec4(skyColour, 1.0), outColour, visibility);
 }

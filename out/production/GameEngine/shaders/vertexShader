@@ -16,8 +16,19 @@ uniform mat4 viewMat;
 uniform vec3 lightPosition;
 uniform float useFakeLighting;
 
-const float density = 0.005;
-const float gradient = 3.5;
+uniform float numOfRows;
+uniform vec2 offset;
+
+const float density = 0.006;
+const float gradient = 1.5;
+
+float LinearizeDepth(float depth)
+{
+    float near = 0.1;
+    float far = 1000.0;
+    float z = depth * 2.0 - 1.0; // Back to NDC
+    return (2.0 * near) / (far + near - z * (far - near));
+}
 
 void main(void){
     vec4 worldPosition = transformMat * vec4(position, 1.0);
@@ -25,7 +36,9 @@ void main(void){
     vec4 posToCam = viewMat * worldPosition;
 
     gl_Position = projectionMat * posToCam;
-    pass_textureCords = textureCoords;
+    //gl_Position.z = LinearizeDepth(gl_Position.z);
+
+    pass_textureCords = textureCoords/numOfRows + offset;
 
     vec3 truenormals = normals;
     if(useFakeLighting > 0.5){

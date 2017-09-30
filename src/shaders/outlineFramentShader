@@ -15,6 +15,39 @@ uniform float shineDamper;
 uniform float reflectivity;
 uniform vec3 skyColour;
 
+
+
+
+vec4 passSecond(vec4 color, vec2 UV){
+    float outline_width = 1.0;
+    float ps = 0.003;
+
+    float a = 0.0;
+    float maxa = color.a;
+    float mina = color.a;
+
+    vec4 outline_color = vec4(0.0,0.0,0.0,1.0);
+
+    a = texture(textureSampler,UV + vec2(0.0,-outline_width)*ps).a;
+    maxa = max(maxa, a);
+    mina = min(mina, a);
+
+    a = texture(textureSampler,UV + vec2(0.0,outline_width)*ps).a;
+    maxa = max(maxa, a);
+    mina = min(mina, a);
+
+    a = texture(textureSampler,UV + vec2(outline_width, 0.0)*ps).a;
+    maxa = max(maxa, a);
+    mina = min(mina, a);
+
+    a = texture(textureSampler,UV + vec2(-outline_width,0.0)*ps).a;
+    maxa = max(maxa, a);
+    mina = min(mina, a);
+
+    color=mix(color, outline_color, maxa - mina);
+    return color;
+}
+
 void main(void){
     vec3 unitNormal = normalize(surfaceNormal);
     vec3 unitLight = normalize(toLightVetor);
@@ -35,10 +68,20 @@ void main(void){
     vec3 diffuse = brightness * lightColour;
 
     vec4 textureColour = texture(textureSampler, pass_textureCords);
+
+    textureColour = passSecond(textureColour, pass_textureCords);
+
     if(textureColour.a < 0.5){
         discard;
     }
 
     outColour = vec4(diffuse, 1.0) * textureColour + vec4(finalSpecular, 1.0);
+
     outColour = mix(vec4(skyColour, 1.0), outColour, visibility);
+
 }
+
+
+
+
+

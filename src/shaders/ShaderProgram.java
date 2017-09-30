@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
-
+import org.lwjgl.util.vector.Vector2f;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -75,6 +75,10 @@ public abstract class ShaderProgram {
         GL20.glUniform3f(location, value.x, value.y, value.z);
     }
 
+    protected void loadVec2(int location, Vector2f value){
+        GL20.glUniform2f(location, value.x, value.y);
+    }
+
     protected void loadBoolean(int location, boolean value){
         float toload = 0.f;
         if(value){
@@ -114,5 +118,9 @@ public abstract class ShaderProgram {
         }
 
         return shaderId;
+    }
+
+    public void loadMatrix(int location_transformationMatrix, Matrix4f matrix) {
+        loadMatrix4f(location_transformationMatrix, matrix);
     }
 }

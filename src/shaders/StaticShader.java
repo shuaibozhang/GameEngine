@@ -4,6 +4,7 @@ import entities.Camera;
 import entities.Light;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector2f;
 import toolbox.Maths;
 
 /**
@@ -11,7 +12,7 @@ import toolbox.Maths;
  */
 public class StaticShader extends ShaderProgram {
     private static final String VERTEX_FILE = "src/shaders/vertexShader";
-    private static final String FRAGMENT_FILE = "src/shaders/fragmentShader";
+    private static final String FRAGMENT_FILE = "src/shaders/outlineFramentShader";
 
     private int localtion_transformMat4;
     private int localtion_projectionMat4;
@@ -26,6 +27,9 @@ public class StaticShader extends ShaderProgram {
     private int localtion_useFakeLighting;
 
     private int localtion_skyColour;
+
+    private int localtion_numOfRows;
+    private int localtion_offset;
 
     public StaticShader(){
         super(VERTEX_FILE, FRAGMENT_FILE);
@@ -47,6 +51,9 @@ public class StaticShader extends ShaderProgram {
         localtion_useFakeLighting = super.getUniformLocation("useFakeLighting");
 
         localtion_skyColour = super.getUniformLocation("skyColour");
+
+        localtion_numOfRows = super.getUniformLocation("numOfRows");
+        localtion_offset = super.getUniformLocation("offset");
     }
 
     @Override
@@ -85,6 +92,14 @@ public class StaticShader extends ShaderProgram {
 
     public void loadSkyColour(Vector3f skyColour){
         super.loadVec3(localtion_skyColour, skyColour);
+    }
+
+    public void loadNumOfRows(int rows){
+        super.loadFloat(localtion_numOfRows, rows);
+    }
+
+    public void loadOffSet(float offx, float offy){
+        super.loadVec2(localtion_offset, new Vector2f(offx, offy));
     }
 
 }

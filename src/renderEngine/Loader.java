@@ -2,10 +2,7 @@ package renderEngine;
 
 import models.RawModel;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -33,11 +30,22 @@ public class Loader {
         return new RawModel(vaoID, indices.length);
     }
 
+    public RawModel loadToVAO(float[] postions){
+        int vaoID = createVAO();
+        storeDataInAttributeList(0,postions, 3);
+        unbindVAO();
+        return new RawModel(vaoID, postions.length/2);
+    }
+
     public int loadTexture(String filename){
         Texture texture = null;
 
         try {
             texture = TextureLoader.getTexture("png", new FileInputStream("res/" + filename + ".png"));
+
+            GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
+            GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, -2.f);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -53,6 +53,8 @@ public class EntityRender {
             MasterRender.disableCulling();
         }
 
+        this.shader.loadNumOfRows(model.getTexture().getNumOfRows());
+
         this.shader.loadUseFakeLight(model.getTexture().isUsingFakeLighting());
 
         this.shader.loadShineVariables(model.getTexture().getShineDamper(), model.getTexture().getReflectivity());
@@ -74,5 +76,7 @@ public class EntityRender {
     private void prepareInstance(Entity entity){
         Matrix4f transform = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotX(),entity.getRotY(),entity.getRotZ(),entity.getScale());
         shader.loadTransformMatrix(transform);
+
+        shader.loadOffSet(entity.getTextureXOffset(), entity.getTextureYOffset());
     }
 }
