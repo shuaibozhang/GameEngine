@@ -19,6 +19,9 @@ import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
 import toolbox.Maths;
+import java.io.File;
+import  org.lwjgl.util.*;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,7 @@ import java.util.Random;
 public class MainGameLoop {
     public static long s_startTime = System.currentTimeMillis();
     public static void main(String[] args) {
+        addLwjglNativesToJavaLibraryPathProperty();
 	// write your code here
         DisplayManager.createDisplay();
         Random random = new Random();
@@ -66,8 +70,8 @@ public class MainGameLoop {
         textureModel3.getTexture().setUsingFakeLighting(true);
         textureModelArray.add(textureModel3);
 
-        RawModel rawModel4 = OBJLoader.loadObgModel("tree", loader);
-        ModelTexture texture4 = new ModelTexture(loader.loadTexture("tree"));
+        RawModel rawModel4 = OBJLoader.loadObgModel("lamp", loader);
+        ModelTexture texture4 = new ModelTexture(loader.loadTexture("lamp"));
         TextureModel textureModel4 = new TextureModel(rawModel4, texture4);
         textureModel4.getTexture().setShineDamper(20);
         textureModel4.getTexture().setReflectivity(0);
@@ -102,7 +106,16 @@ public class MainGameLoop {
                 0,1);
 
         Camera camera = new Camera(player);
-        Light light = new Light(new Vector3f(0.0f,100.f,0), new Vector3f(1,1,1));
+
+        List<Light> lights = new ArrayList<Light>();
+        Light light = new Light(new Vector3f(0.0f,5.f,0), new Vector3f(1,1,1), new Vector3f(1,0.01f, 0.002f));
+        Light light2 = new Light(new Vector3f(200.0f,500.f,0), new Vector3f(1,0,0));
+        Light light3 = new Light(new Vector3f(500.0f,0.f,0), new Vector3f(0,0,0.3f));
+        Light light4 = new Light(new Vector3f(0.0f,0.f,0), new Vector3f(0,0,0));
+        lights.add(light);
+        //lights.add(light2);
+        //lights.add(light3);
+        //lights.add(light4);
 
         List<GuiTexture> guis = new ArrayList<GuiTexture>();
         GuiRender guiRender = new GuiRender(loader);
@@ -114,13 +127,14 @@ public class MainGameLoop {
         while (!Display.isCloseRequested()){
             camera.move();
             player.move(terrain);
-
+            float offy = (float)( Math.sin(Math.toRadians((System.currentTimeMillis() - s_startTime)/10)) + 1) * 40.f;
+            light.setPosition(new Vector3f(player.getPosition().x, player.getPosition().y + offy, player.getPosition().z));
             for (Entity entity:all){
                 render.processEntity(entity);
             }
             render.processTerrain(terrain);
             render.processEntity(player);
-            render.render(light, camera);
+            render.render(lights, camera);
 
             guiRender.render(guis);
 
@@ -130,5 +144,10 @@ public class MainGameLoop {
         render.cleanUp();
         loader.cleanUp();
         DisplayManager.closeDisplay();
+    }
+
+    private static void addLwjglNativesToJavaLibraryPathProperty() {
+        File JGLLib = new File("libs/native/windows/");
+        System.setProperty("org.lwjgl.librarypath", JGLLib.getAbsolutePath());
     }
 }

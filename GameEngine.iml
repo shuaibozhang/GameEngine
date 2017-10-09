@@ -7,28 +7,37 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/Downloads/lwjgl-2.9.3/jar/lwjgl_util.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/lwjgl.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/Downloads/lwjgl-2.9.3/jar/lwjgl.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/slick-util.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/Downloads/lwjgl-2.9.3/jar/slick-util.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/jinput.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/lwjgl_util.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

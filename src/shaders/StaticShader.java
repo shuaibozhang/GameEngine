@@ -7,19 +7,23 @@ import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector2f;
 import toolbox.Maths;
 
+import java.util.List;
+
 /**
  * Created by zhangshuaibo on 2017/4/19.
  */
 public class StaticShader extends ShaderProgram {
+    private static final int MAX_LIGHTS = 4;
     private static final String VERTEX_FILE = "src/shaders/vertexShader";
-    private static final String FRAGMENT_FILE = "src/shaders/outlineFramentShader";
+    private static final String FRAGMENT_FILE = "src/shaders/fragmentShader";
 
     private int localtion_transformMat4;
     private int localtion_projectionMat4;
     private int localtion_viewMat4;
 
-    private int localtion_lightPosition;
-    private int localtion_lightColour;
+    private int localtion_lightPosition[];
+    private int localtion_lightColour[];
+    private int localtion_attenuation[];
 
     private int localtion_shineDamper;
     private int localtion_reflectivity;
@@ -42,8 +46,14 @@ public class StaticShader extends ShaderProgram {
         localtion_projectionMat4 = super.getUniformLocation("projectionMat");
         localtion_viewMat4 = super.getUniformLocation("viewMat");
 
-        localtion_lightPosition = super.getUniformLocation("lightPosition");
-        localtion_lightColour = super.getUniformLocation("lightColour");
+        localtion_lightPosition = new int[MAX_LIGHTS];
+        localtion_lightColour = new int[MAX_LIGHTS];
+        localtion_attenuation = new int[MAX_LIGHTS];
+        for(int i = 0; i < MAX_LIGHTS; i++) {
+            localtion_lightPosition[i] = super.getUniformLocation("lightPosition[" + i + "]");
+            localtion_lightColour[i] = super.getUniformLocation("lightColour[" + i + "]");
+            localtion_attenuation[i] = super.getUniformLocation("attenuation[" + i + "]");
+        }
 
         localtion_shineDamper = super.getUniformLocation("shineDamper");
         localtion_reflectivity = super.getUniformLocation("reflectivity");
@@ -76,9 +86,20 @@ public class StaticShader extends ShaderProgram {
         super.loadMatrix4f(localtion_viewMat4, mat4);
     }
 
-    public void loadLight(Light light){
-        super.loadVec3(localtion_lightPosition, light.getPosition());
-        super.loadVec3(localtion_lightColour, light.getColour());
+    public void loadLight(List<Light> light){
+        for (int i = 0; i < MAX_LIGHTS; i++){
+            if(i < light.size()){
+                Light curLight = light.get(i);
+                super.loadVec3(localtion_lightPosition[i], curLight.getPosition());
+                super.loadVec3(localtion_lightColour[i], curLight.getColour());
+                super.loadVec3(localtion_attenuation[i], curLight.getAttenuation());
+            }
+            else{
+                super.loadVec3(localtion_lightPosition[i],new Vector3f(0,0,0));
+                super.loadVec3(localtion_lightColour[i],new Vector3f(0,0,0));
+                super.loadVec3(localtion_attenuation[i], new Vector3f(1,0,0));
+            }
+        }
     }
 
     public void loadShineVariables(float damper, float reflctivity){

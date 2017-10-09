@@ -6,21 +6,21 @@ in vec3 normals;
 
 out vec2 pass_textureCords;
 out vec3 surfaceNormal;
-out vec3 toLightVetor;
+out vec3 toLightVetor[4];
 out vec3 toCameraVetor;
 out float visibility;
 
 uniform mat4 transformMat;
 uniform mat4 projectionMat;
 uniform mat4 viewMat;
-uniform vec3 lightPosition;
+uniform vec3 lightPosition[4];
 uniform float useFakeLighting;
 
 uniform float numOfRows;
 uniform vec2 offset;
 
-const float density = 0.006;
-const float gradient = 1.5;
+const float density = 0.003;
+const float gradient = 1.0;
 
 float LinearizeDepth(float depth)
 {
@@ -46,7 +46,9 @@ void main(void){
     }
 
     surfaceNormal = (transformMat * vec4(truenormals, 0.0)).xyz;
-    toLightVetor = lightPosition - worldPosition.xyz;
+    for(int i = 0; i < 4; i++){
+        toLightVetor[i] = lightPosition[i] - worldPosition.xyz;
+    }
 
     toCameraVetor = (inverse(viewMat) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - worldPosition.xyz;
 
