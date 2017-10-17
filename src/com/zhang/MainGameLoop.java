@@ -88,7 +88,7 @@ public class MainGameLoop {
                 new TerrainTexturePack(backgroundTexture,rTexture,gTexture,bTexture), blendTexture, "heightmap");
 
 
-        for(int i = 0; i < 300; i++){
+        for(int i = 0; i < 3; i++){
             float x = random.nextFloat()*300 - 150;
             float z = random.nextFloat()*300 - 150;
             float y = terrain.getHeighOfTerrain(x, z);
@@ -147,7 +147,7 @@ public class MainGameLoop {
     }
 
     private static void addLwjglNativesToJavaLibraryPathProperty() {
-        File JGLLib = new File("libs/native/windows/");
+        File JGLLib = new File("libs/native/macosx/");
         System.setProperty("org.lwjgl.librarypath", JGLLib.getAbsolutePath());
     }
 }
