@@ -4,6 +4,8 @@ import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import entities.Player;
+import fontMeshCreator.FontType;
+import fontMeshCreator.GUIText;
 import guis.GuiRender;
 import guis.GuiTexture;
 import models.TextureModel;
@@ -123,12 +125,13 @@ public class MainGameLoop {
         guis.add(guiTexture);
 
         MasterRender render = new MasterRender();
+        FontType fontyype = new FontType(loader.loadTexture("Test"), new File("res/Test.fnt"));
+        GUIText text = new GUIText("zhang shuai bo hahaha~", 30, fontyype, new Vector2f(), 500, true);
+
 
         while (!Display.isCloseRequested()){
             camera.move();
             player.move(terrain);
-            float offy = (float)( Math.sin(Math.toRadians((System.currentTimeMillis() - s_startTime)/10)) + 1) * 40.f;
-            light.setPosition(new Vector3f(player.getPosition().x, player.getPosition().y + offy, player.getPosition().z));
             for (Entity entity:all){
                 render.processEntity(entity);
             }
