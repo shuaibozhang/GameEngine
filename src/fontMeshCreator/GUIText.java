@@ -2,7 +2,8 @@ package fontMeshCreator;
 
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
-import renderEngine.TextMaster;
+
+import fontRendering.TextMaster;
 
 /**
  * Represents a piece of text in the game.
@@ -60,15 +61,13 @@ public class GUIText {
 		this.position = position;
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
-		// load text
-		TextMaster.loadText(this);
+		TextMaster.loadText(this);;
 	}
 
 	/**
 	 * Remove the text from the screen.
 	 */
 	public void remove() {
-		// remove text
 		TextMaster.removeText(this);
 	}
 

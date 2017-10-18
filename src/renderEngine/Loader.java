@@ -32,7 +32,7 @@ public class Loader {
 
     public int loadToVAO(float[] postions, float[] uvs){
         int vaoID = createVAO();
-        storeDataInAttributeList(0,postions, 3);
+        storeDataInAttributeList(0,postions, 2);
         storeDataInAttributeList(1,uvs,2);
         unbindVAO();
         return vaoID;

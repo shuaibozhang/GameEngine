@@ -1,14 +1,15 @@
 package fontRendering;
 
-import fontMeshCreator.FontType;
-import fontMeshCreator.GUIText;
+import java.util.List;
+import java.util.Map;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-import java.util.List;
-import java.util.Map;
+import fontMeshCreator.FontType;
+import fontMeshCreator.GUIText;
 
 public class FontRenderer {
 
@@ -17,11 +18,7 @@ public class FontRenderer {
 	public FontRenderer() {
 		shader = new FontShader();
 	}
-
-	public void cleanUp(){
-		shader.cleanUp();
-	}
-
+	
 	public void render(Map<FontType, List<GUIText>> texts){
 		prepare();
 		for(FontType font : texts.keySet()){
@@ -31,8 +28,13 @@ public class FontRenderer {
 				renderText(text);
 			}
 		}
+		endRendering();
 	}
 
+	public void cleanUp(){
+		shader.cleanUp();
+	}
+	
 	private void prepare(){
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -54,8 +56,8 @@ public class FontRenderer {
 	
 	private void endRendering(){
 		shader.stop();
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
 	}
 
 }

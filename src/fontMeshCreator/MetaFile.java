@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.lwjgl.opengl.Display;
+import renderEngine.DisplayManager;
 
 /**
  * Provides functionality for getting the values from a font file.
@@ -162,6 +163,7 @@ public class MetaFile {
 	private void loadLineSizes() {
 		processNextLine();
 		int lineHeightPixels = getValueOfVariable("lineHeight") - paddingHeight;
+		TextMeshCreator.LINE_HEIGHT = (double)lineHeightPixels /720.0;
 		verticalPerPixelSize = TextMeshCreator.LINE_HEIGHT / (double) lineHeightPixels;
 		horizontalPerPixelSize = verticalPerPixelSize / aspectRatio;
 	}

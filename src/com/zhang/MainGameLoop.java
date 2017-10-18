@@ -6,23 +6,21 @@ import entities.Light;
 import entities.Player;
 import fontMeshCreator.FontType;
 import fontMeshCreator.GUIText;
+import fontRendering.TextMaster;
 import guis.GuiRender;
 import guis.GuiTexture;
 import models.TextureModel;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import renderEngine.*;
 import models.RawModel;
-import shaders.StaticShader;
 import terrains.Terrain;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
-import toolbox.Maths;
+
 import java.io.File;
-import  org.lwjgl.util.*;
 
 
 import java.util.ArrayList;
@@ -128,8 +126,10 @@ public class MainGameLoop {
 
         TextMaster.init(loader);
 
-        FontType fontyype = new FontType(loader.loadTexture("verdana"), new File("res/verdana.fnt"));
-        GUIText text = new GUIText("hahah", 1, fontyype, new Vector2f(), 1, true);
+        FontType font = new FontType(loader.loadTexture("Test"), new File("res/Test.fnt"));
+        GUIText text = new GUIText("This is some textggggg!", 1.f, font, new Vector2f(0f, 0f), 1f, true);
+        text.setColour(1, 0, 0);
+
 
         text.setColour(1,1,0);
         while (!Display.isCloseRequested()){
