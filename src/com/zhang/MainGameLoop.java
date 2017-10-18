@@ -125,10 +125,13 @@ public class MainGameLoop {
         guis.add(guiTexture);
 
         MasterRender render = new MasterRender();
-        FontType fontyype = new FontType(loader.loadTexture("Test"), new File("res/Test.fnt"));
-        GUIText text = new GUIText("zhang shuai bo hahaha~", 30, fontyype, new Vector2f(), 500, true);
 
+        TextMaster.init(loader);
 
+        FontType fontyype = new FontType(loader.loadTexture("verdana"), new File("res/verdana.fnt"));
+        GUIText text = new GUIText("hahah", 1, fontyype, new Vector2f(), 1, true);
+
+        text.setColour(1,1,0);
         while (!Display.isCloseRequested()){
             camera.move();
             player.move(terrain);
@@ -141,16 +144,19 @@ public class MainGameLoop {
 
             guiRender.render(guis);
 
+            TextMaster.render();
+
             DisplayManager.updateDisplay();
         }
         guiRender.cleanUp();
         render.cleanUp();
+        TextMaster.cleanUp();
         loader.cleanUp();
         DisplayManager.closeDisplay();
     }
 
     private static void addLwjglNativesToJavaLibraryPathProperty() {
-        File JGLLib = new File("libs/native/macosx/");
+        File JGLLib = new File("libs/native/windows/");
         System.setProperty("org.lwjgl.librarypath", JGLLib.getAbsolutePath());
     }
 }
