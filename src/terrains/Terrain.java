@@ -122,6 +122,7 @@ public class Terrain {
     }
 
     private RawModel generateTerrain(Loader loader, String heightMap) {
+        HeightsGenerator generator = new HeightsGenerator();
         BufferedImage image = null;
 
         try {
@@ -129,7 +130,7 @@ public class Terrain {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        int VERTEX_COUNT = image.getHeight();
+        int VERTEX_COUNT = 128;
         heights = new float[VERTEX_COUNT][VERTEX_COUNT];
 
         int count = VERTEX_COUNT * VERTEX_COUNT;
@@ -141,7 +142,7 @@ public class Terrain {
         for(int i=0;i<VERTEX_COUNT;i++){
             for(int j=0;j<VERTEX_COUNT;j++){
 
-                float height = getHeight(j, i, image);
+                float height = getHeight(j, i, generator);
 
                 heights[j][i] = height;
 
@@ -149,7 +150,7 @@ public class Terrain {
                 vertices[vertexPointer*3+1] = height;
                 vertices[vertexPointer*3+2] = (float)i/((float)VERTEX_COUNT - 1) * SIZE;
 
-                Vector3f normal = calculateNormal(j,i,image);
+                Vector3f normal = calculateNormal(j,i,generator);
 
                 normals[vertexPointer*3] = normal.x;
                 normals[vertexPointer*3+1] = normal.y;
@@ -179,7 +180,7 @@ public class Terrain {
         return loader.loadToVAO(vertices, indices,normals,textureCoords);
     }
 
-    private Vector3f calculateNormal(int x, int z, BufferedImage image){
+    private Vector3f calculateNormal(int x, int z, HeightsGenerator image){
         float heightL = getHeight(x-1, z, image);
         float heightR = getHeight(x+1, z, image);
         float heightD = getHeight(x, z-1, image);
@@ -189,16 +190,8 @@ public class Terrain {
         return normal;
     }
 
-    private float getHeight(int x, int z, BufferedImage image){
-        if(x < 0 || x >= image.getHeight() || z < 0 || z >= image.getHeight()){
-            return  0;
-        }
-
-        float height = image.getRGB(x, z);
-        height += MAX_PIXEL_COLOUR/2.f;
-        height /= MAX_PIXEL_COLOUR/2.f;
-        height *= MAX_HEIGHT;
-        return height;
+    private float getHeight(int x, int z, HeightsGenerator image){
+        return image.generateHeight(x,z);
     }
 
     public  float getHeighOfTerrain(float tx, float tz){

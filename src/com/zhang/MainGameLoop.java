@@ -19,6 +19,10 @@ import terrains.Terrain;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
+import water.WaterFrameBuffers;
+import water.WaterRenderer;
+import water.WaterShader;
+import water.WaterTile;
 
 import java.io.File;
 
@@ -88,7 +92,7 @@ public class MainGameLoop {
                 new TerrainTexturePack(backgroundTexture,rTexture,gTexture,bTexture), blendTexture, "heightmap");
 
 
-        for(int i = 0; i < 100; i++){
+        for(int i = 0; i < 10000; i++){
             float x = random.nextFloat()*300 - 150;
             float z = random.nextFloat()*300 - 150;
             float y = terrain.getHeighOfTerrain(x, z);
@@ -119,7 +123,7 @@ public class MainGameLoop {
 
         List<GuiTexture> guis = new ArrayList<GuiTexture>();
         GuiRender guiRender = new GuiRender(loader);
-        GuiTexture guiTexture = new GuiTexture(loader.loadTexture("grassy"), new Vector2f(0.5f, 0.5f), new Vector2f(1,1));
+        GuiTexture guiTexture = new GuiTexture(loader.loadTexture("socuwan"), new Vector2f(0.0f, 0.0f), new Vector2f(0.3f,0.3f));
         guis.add(guiTexture);
 
         MasterRender render = new MasterRender();
@@ -127,27 +131,44 @@ public class MainGameLoop {
         TextMaster.init(loader);
 
         FontType font = new FontType(loader.loadTexture("dft"), new File("res/dft.fnt"));
-        GUIText text = new GUIText("abcdefg hijklmn opq rst uvwxyz", 5.f, font, new Vector2f(0f, 0f), 1f, true);
+        GUIText text = new GUIText("abcdefg hijklmn opq rst uvwxyz", 1.f, font, new Vector2f(0f, 0f), 1f, true);
         text.setColour(1, 0, 0);
 
+        WaterShader waterShader = new WaterShader();
+        WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, render.getProjectionMatrix());
+        List<WaterTile> waters = new ArrayList<WaterTile>();
+        waters.add(new WaterTile(75, -75, 5));
 
-        text.setColour(1,1,0);
+        WaterFrameBuffers waterFrameBuffers = new WaterFrameBuffers();
+        guis.add(new GuiTexture(waterFrameBuffers.getReflectionTexture(), new Vector2f(-0.5f, 0.5f), new Vector2f(0.2f,0.2f)));
+
         while (!Display.isCloseRequested()){
             camera.move();
             player.move(terrain);
+
+            for (Entity entity:all){
+                render.processEntity(entity);
+            }
+            render.processTerrain(terrain);
+            render.processEntity(player);
+
+            waterFrameBuffers.bindReflectionFrameBuffer();
+            render.render(lights, camera);
+            waterRenderer.render(waters,camera);
+            waterFrameBuffers.unbindCurrentFrameBuffer();
+
             for (Entity entity:all){
                 render.processEntity(entity);
             }
             render.processTerrain(terrain);
             render.processEntity(player);
             render.render(lights, camera);
-
+            waterRenderer.render(waters,camera);
             guiRender.render(guis);
-
             TextMaster.render();
-
             DisplayManager.updateDisplay();
         }
+        waterFrameBuffers.cleanUp();
         guiRender.cleanUp();
         render.cleanUp();
         TextMaster.cleanUp();
@@ -156,7 +177,7 @@ public class MainGameLoop {
     }
 
     private static void addLwjglNativesToJavaLibraryPathProperty() {
-        File JGLLib = new File("libs/native/macosx/");
+        File JGLLib = new File("libs/native/windows/");
         System.setProperty("org.lwjgl.librarypath", JGLLib.getAbsolutePath());
     }
 }
