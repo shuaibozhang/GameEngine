@@ -7,8 +7,38 @@ out vec4 out_colour;
 uniform vec3 colour;
 uniform sampler2D fontAtlas;
 
+const float width = 0.5;
+const float edge = 0.04;
+
+const float borderWidth = 0.6;
+const float borderEdge = 0.1;
+
+const vec3 outlineColour = vec3(0.0, 0.0, 0.0);
+
+const vec2 off = vec2(0.002,0.002);
+const vec3 shdowColour = vec3(0.0, 0.0, 0.0);
+
 void main(void){
 
-	out_colour = vec4(colour, texture(fontAtlas, pass_textureCoords).a);
+    float distance = 1.0 - texture(fontAtlas, pass_textureCoords).a;
+    float alpha = 1.0 - smoothstep(width, width + edge, distance);
+
+    float distance2 = 1.0 - texture(fontAtlas, pass_textureCoords + off).a;
+    float alpha2 = 1.0 - smoothstep(borderWidth, borderWidth + borderEdge, distance2);
+
+    float finalAlpha = alpha + (1.0 - alpha) * alpha2;
+
+    vec3 overall;
+    if(finalAlpha <= 0.0)
+    {
+        overall = mix(outlineColour, colour, 1.0);
+    }
+    else
+    {
+        overall = mix(outlineColour, colour, alpha / finalAlpha);
+    }
+
+
+	out_colour = vec4(overall, finalAlpha);
 
 }

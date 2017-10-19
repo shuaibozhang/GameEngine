@@ -88,11 +88,11 @@ public class MainGameLoop {
                 new TerrainTexturePack(backgroundTexture,rTexture,gTexture,bTexture), blendTexture, "heightmap");
 
 
-        for(int i = 0; i < 3; i++){
+        for(int i = 0; i < 100; i++){
             float x = random.nextFloat()*300 - 150;
             float z = random.nextFloat()*300 - 150;
             float y = terrain.getHeighOfTerrain(x, z);
-            int ranidx = random.nextInt(4);
+            int ranidx = random.nextInt(3);
             TextureModel randomTextureModel = textureModelArray.get(ranidx);
             int scale = ranidx == 3 ? 5:1;
             Entity entity = new Entity(randomTextureModel, random.nextInt(4),new Vector3f(x, y, z), 0,
@@ -108,7 +108,7 @@ public class MainGameLoop {
         Camera camera = new Camera(player);
 
         List<Light> lights = new ArrayList<Light>();
-        Light light = new Light(new Vector3f(0.0f,5.f,0), new Vector3f(1,1,1), new Vector3f(1,0.01f, 0.002f));
+        Light light = new Light(new Vector3f(0.0f,50.f,0), new Vector3f(1,1,1), new Vector3f(1,0.0f, 0.0f));
         Light light2 = new Light(new Vector3f(200.0f,500.f,0), new Vector3f(1,0,0));
         Light light3 = new Light(new Vector3f(500.0f,0.f,0), new Vector3f(0,0,0.3f));
         Light light4 = new Light(new Vector3f(0.0f,0.f,0), new Vector3f(0,0,0));
@@ -126,8 +126,8 @@ public class MainGameLoop {
 
         TextMaster.init(loader);
 
-        FontType font = new FontType(loader.loadTexture("Test"), new File("res/Test.fnt"));
-        GUIText text = new GUIText("This is some textggggg!", 1.f, font, new Vector2f(0f, 0f), 1f, true);
+        FontType font = new FontType(loader.loadTexture("dft"), new File("res/dft.fnt"));
+        GUIText text = new GUIText("abcdefg hijklmn opq rst uvwxyz", 5.f, font, new Vector2f(0f, 0f), 1f, true);
         text.setColour(1, 0, 0);
 
 
@@ -156,7 +156,7 @@ public class MainGameLoop {
     }
 
     private static void addLwjglNativesToJavaLibraryPathProperty() {
-        File JGLLib = new File("libs/native/windows/");
+        File JGLLib = new File("libs/native/macosx/");
         System.setProperty("org.lwjgl.librarypath", JGLLib.getAbsolutePath());
     }
 }

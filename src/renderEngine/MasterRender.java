@@ -32,7 +32,7 @@ public class MasterRender {
     private static final float NEAR_PLANE = 0.1f;
     private static final float FAR_PLANE = 1000;
 
-    private Vector3f skyColour = new Vector3f(0.1f,0.1f,0.1f);
+    private Vector3f skyColour = new Vector3f(0.8f,0.8f,0.8f);
 
     private Map<TextureModel, List<Entity>> entities = new HashMap<TextureModel, List<Entity>>();
     private List<Terrain> terrains = new ArrayList<Terrain>();
