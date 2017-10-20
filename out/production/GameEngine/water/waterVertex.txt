@@ -2,16 +2,29 @@
 
 in vec2 position;
 
-out vec2 textureCoords;
+out vec4 textureCoords;
 
+uniform mat4 viewMatrixWater;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
 
+float LinearizeDepth(float depth)
+{
+    float near = 0.1;
+    float far = 10000.0;
+    float z = depth * 2.0 - 1.0; // Back to NDC
+    return (2.0 * near) / (far + near - z * (far - near));
+}
+
+float testz(vec4 pos)
+{
+    return pos.z * pos.z;
+}
 
 void main(void) {
 
 	gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position.x, 0.0, position.y, 1.0);
-	textureCoords = vec2(position.x/2.0 + 0.5, position.y/2.0 + 0.5);
- 
+	textureCoords = projectionMatrix * viewMatrixWater * modelMatrix * vec4(position.x, 0.0, position.y, 1.0);
+
 }

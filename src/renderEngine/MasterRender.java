@@ -8,6 +8,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 import shaders.StaticShader;
 import shaders.TerrainShader;
 import terrains.Terrain;
@@ -30,7 +31,7 @@ public class MasterRender {
 
     private static final float FOV = 70;
     private static final float NEAR_PLANE = 0.1f;
-    private static final float FAR_PLANE = 1000;
+    private static final float FAR_PLANE = 10000;
 
     private Vector3f skyColour = new Vector3f(0.8f,0.8f,0.8f);
 
@@ -49,17 +50,19 @@ public class MasterRender {
         terrainsRender = new TerrainsRender(terrainShader, projectionMatrix);
     }
 
-    public void render(List<Light> light, Camera camera){
+    public void render(List<Light> light, Camera camera, Vector4f clipPlane){
         prepare();
 
         shader.start();
         shader.loadLight(light);
         shader.loadViewMatrix(camera);
         shader.loadSkyColour(skyColour);
+        shader.loadPlane(clipPlane);
         entityRender.render(entities);
         shader.stop();
 
         terrainShader.start();
+        terrainShader.loadPlane(clipPlane);
         terrainShader.loadLight(light);
         terrainShader.loadViewMatrix(camera);
         terrainShader.loadSkyColour(skyColour);

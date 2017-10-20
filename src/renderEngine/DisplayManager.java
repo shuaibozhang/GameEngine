@@ -10,8 +10,8 @@ import org.lwjgl.opengl.GL11;
  * Created by zhangshuaibo on 2017/4/6.
  */
 public class DisplayManager {
-    private static final int WIDTH = 1280;
-    public static final int HEIGHT = 720;
+    private static final int WIDTH = 960;
+    public static final int HEIGHT = 640;
     private static final int FPS_CAP = 60;
 
     private static long lastFrameTime;

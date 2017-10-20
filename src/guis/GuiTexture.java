@@ -9,11 +9,21 @@ public class GuiTexture {
     private int texture;
     private Vector2f position;
     private Vector2f scale;
+    private float rotate;
 
-    public GuiTexture(int texture, Vector2f position, Vector2f scale) {
+    public GuiTexture(int texture, Vector2f position, Vector2f scale, float rotate) {
         this.texture = texture;
         this.position = position;
         this.scale = scale;
+        this.rotate = rotate;
+    }
+
+    public float getRotate() {
+        return rotate;
+    }
+
+    public void setRotate(float rotate) {
+        this.rotate = rotate;
     }
 
     public int getTexture() {

@@ -5,6 +5,7 @@ import entities.Light;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector4f;
 import toolbox.Maths;
 
 import java.util.List;
@@ -35,6 +36,8 @@ public class StaticShader extends ShaderProgram {
     private int localtion_numOfRows;
     private int localtion_offset;
 
+    private int localtion_plane;
+
     public StaticShader(){
         super(VERTEX_FILE, FRAGMENT_FILE);
 
@@ -64,6 +67,8 @@ public class StaticShader extends ShaderProgram {
 
         localtion_numOfRows = super.getUniformLocation("numOfRows");
         localtion_offset = super.getUniformLocation("offset");
+
+        localtion_plane = super.getUniformLocation("plane");
     }
 
     @Override
@@ -123,4 +128,7 @@ public class StaticShader extends ShaderProgram {
         super.loadVec2(localtion_offset, new Vector2f(offx, offy));
     }
 
+    public void loadPlane(Vector4f plane){
+        super.loadVec4(localtion_plane ,plane);
+    }
 }

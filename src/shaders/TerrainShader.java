@@ -4,6 +4,7 @@ import entities.Camera;
 import entities.Light;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 import toolbox.Maths;
 
 import java.util.List;
@@ -34,6 +35,8 @@ public class TerrainShader extends ShaderProgram {
     private int localtion_bTexture;
     private int localtion_blendMap;
 
+    private int localtion_plane;
+
     public TerrainShader(){
         super(VERTEX_FILE, FRAGMENT_FILE);
     }
@@ -63,6 +66,8 @@ public class TerrainShader extends ShaderProgram {
         localtion_gTexture = super.getUniformLocation("gTexture");
         localtion_bTexture = super.getUniformLocation("bTexture");
         localtion_blendMap = super.getUniformLocation("blendMap");
+
+        localtion_plane = super.getUniformLocation("plane");
     }
 
     @Override
@@ -116,5 +121,9 @@ public class TerrainShader extends ShaderProgram {
 
     public void loadSkyColour(Vector3f skyColour){
         super.loadVec3(localtion_skyColour, skyColour);
+    }
+
+    public void loadPlane(Vector4f plane){
+        super.loadVec4(localtion_plane ,plane);
     }
 }

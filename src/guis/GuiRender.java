@@ -38,7 +38,7 @@ public class GuiRender {
             GL13.glActiveTexture(GL13.GL_TEXTURE0);
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, guiTexture.getTexture());
             Matrix4f mat = Maths.createTransformationMatrix(new Vector3f(guiTexture.getPosition().x, guiTexture.getPosition().y, 0.0f),
-                    0.0f,0.0f,0.0f,
+                    0.0f,0.0f,guiTexture.getRotate(),
                     new Vector3f(guiTexture.getScale().getX(), guiTexture.getScale().getY(),0.0f));
             shader.loadTransformation(mat);
             GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, quad.getVertexCount());

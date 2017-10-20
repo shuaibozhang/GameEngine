@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector4f;
 import shaders.TerrainShader;
 import terrains.Terrain;
 import textures.TerrainTexturePack;
@@ -45,7 +46,6 @@ public class TerrainsRender {
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(1);
         GL20.glEnableVertexAttribArray(2);
-
         this.shader.loadShineVariables(1, 0);
         bindTextures(model);
     }

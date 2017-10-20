@@ -18,17 +18,26 @@ uniform vec3 lightPosition[4];
 const float density = 0.003;
 const float gradient = 1.0;
 
+uniform vec4 plane;
+
 float LinearizeDepth(float depth)
 {
     float near = 0.1;
-    float far = 1000.0;
+    float far = 10000.0;
     float z = depth * 2.0 - 1.0; // Back to NDC
     return (2.0 * near) / (far + near - z * (far - near));
 }
 
+float testz(vec4 pos)
+{
+    return pos.z * pos.z;
+}
 
 void main(void){
     vec4 worldPosition = transformMat * vec4(position, 1.0);
+
+    gl_ClipDistance[0] = dot(worldPosition, plane);
+
     gl_Position = projectionMat * viewMat * worldPosition;
     pass_textureCords = textureCoords;
 
@@ -43,6 +52,4 @@ void main(void){
     float distance = length(toCameraVetor);
     visibility = exp(-pow((distance * density), gradient));
     visibility = clamp(visibility, 0.0, 1.0);
-
-    //gl_Position.z = LinearizeDepth(gl_Position.z);
 }
