@@ -1,84 +1,75 @@
 package entities;
 
-import models.TextureModel;
+import models.TexturedModel;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
+
 import renderEngine.DisplayManager;
 import terrains.Terrain;
 
-/**
- * Created by zhangshuaibo on 2017/9/29.
- */
 public class Player extends Entity {
 
-    private static final float RUN_SPEED = 20;
-    private static final float TURN_SPEED = 160;
-    private static final float GRAVITY = -50;
-    private static final float JUMP_POWER = 30;
+	private static final float RUN_SPEED = 40;
+	private static final float TURN_SPEED = 160;
+	private static final float GRAVITY = -50;
+	private static final float JUMP_POWER = 18;
 
-    private float currentSpeed = 0;
-    private float currentTurnSpeed = 0;
+	private float currentSpeed = 0;
+	private float currentTurnSpeed = 0;
+	private float upwardsSpeed = 0;
 
-    private float upwardsSpeed = 0;
+	private boolean isInAir = false;
 
-    private float terrainHeight = 0;
+	public Player(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ,
+			float scale) {
+		super(model, position, rotX, rotY, rotZ, scale);
+	}
 
-    private boolean isInAir = false;
+	public void move(Terrain terrain) {
+		checkInputs();
+		super.increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
+		float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
+		float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotY())));
+		float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotY())));
+		super.increasePosition(dx, 0, dz);
+		upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
+		super.increasePosition(0, upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
+		float terrainHeight = terrain.getHeightOfTerrain(getPosition().x, getPosition().z);
+		if (super.getPosition().y < terrainHeight) {
+			upwardsSpeed = 0;
+			isInAir = false;
+			super.getPosition().y = terrainHeight;
+		}
+	}
 
-    public Player(TextureModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
-        super(model, position, rotX, rotY, rotZ, scale);
-    }
+	private void jump() {
+		if (!isInAir) {
+			this.upwardsSpeed = JUMP_POWER;
+			isInAir = true;
+		}
+	}
 
-    public void move(Terrain terrain){
-        checkInput();
-        this.increaseRotation(0,currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
-        float delta = DisplayManager.getFrameTimeSeconds();
-        float distance = currentSpeed * delta;
-        float dx = (float)(distance * Math.sin(Math.toRadians(this.getRotY())));
-        float dz = (float)(distance * Math.cos(Math.toRadians(this.getRotY())));
-        super.increasePosition(dx,0,dz);
+	private void checkInputs() {
+		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
+			this.currentSpeed = RUN_SPEED;
+		} else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+			this.currentSpeed = -RUN_SPEED;
+		} else {
+			this.currentSpeed = 0;
+		}
 
-        upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
-        super.increasePosition(0,upwardsSpeed * DisplayManager.getFrameTimeSeconds(),0);
+		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
+			this.currentTurnSpeed = -TURN_SPEED;
+		} else if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
+			this.currentTurnSpeed = TURN_SPEED;
+		} else {
+			this.currentTurnSpeed = 0;
+		}
 
-        terrainHeight = terrain.getHeighOfTerrain(getPosition().x, getPosition().z);
+		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+			jump();
+		}
+	}
 
-        if(super.getPosition().y < terrainHeight){
-            upwardsSpeed = 0.f;
-            super.getPosition().y = terrainHeight;
-            isInAir = false;
-        }
-    }
-
-    public  void jump(){
-        if(!isInAir){
-            upwardsSpeed = JUMP_POWER;
-            isInAir = true;
-        }
-    }
-
-    private void checkInput(){
-        if(Keyboard.isKeyDown(Keyboard.KEY_W)){
-            currentSpeed = RUN_SPEED;
-        }
-        else if(Keyboard.isKeyDown(Keyboard.KEY_S)){
-            currentSpeed = -RUN_SPEED;
-        }else{
-            currentSpeed = 0;
-        }
-
-        if(Keyboard.isKeyDown(Keyboard.KEY_A)){
-            currentTurnSpeed = TURN_SPEED;
-        }
-        else if(Keyboard.isKeyDown(Keyboard.KEY_D)){
-            currentTurnSpeed = -TURN_SPEED;
-        }else{
-            currentTurnSpeed = 0;
-        }
-
-        if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
-            jump();
-        }
-
-    }
 }

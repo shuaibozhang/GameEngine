@@ -6,7 +6,7 @@ import java.util.List;
 
 public class TextMeshCreator {
 
-	public static double LINE_HEIGHT = 0.03f;
+	protected static final double LINE_HEIGHT = 0.03f;
 	protected static final int SPACE_ASCII = 32;
 
 	private MetaFile metaData;

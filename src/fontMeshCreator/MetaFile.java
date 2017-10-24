@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.lwjgl.opengl.Display;
-import renderEngine.DisplayManager;
 
 /**
  * Provides functionality for getting the values from a font file.
@@ -23,7 +22,7 @@ public class MetaFile {
 	private static final int PAD_BOTTOM = 2;
 	private static final int PAD_RIGHT = 3;
 
-	private static final int DESIRED_PADDING = 8;
+	private static final int DESIRED_PADDING = 3;
 
 	private static final String SPLITTER = " ";
 	private static final String NUMBER_SEPARATOR = ",";
@@ -163,7 +162,6 @@ public class MetaFile {
 	private void loadLineSizes() {
 		processNextLine();
 		int lineHeightPixels = getValueOfVariable("lineHeight") - paddingHeight;
-		TextMeshCreator.LINE_HEIGHT = (double)lineHeightPixels /720.0;
 		verticalPerPixelSize = TextMeshCreator.LINE_HEIGHT / (double) lineHeightPixels;
 		horizontalPerPixelSize = verticalPerPixelSize / aspectRatio;
 	}
